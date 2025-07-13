@@ -22,7 +22,7 @@ export default function Home() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/api/products?category=${encodeURIComponent(selected)}`)
+      .get(`https://healthsync-6w2s.onrender.com/api/products?category=${encodeURIComponent(selected)}`)
       .then((res) => {
         setCategoryProducts(res.data);
         setDisplayedProducts(res.data);
