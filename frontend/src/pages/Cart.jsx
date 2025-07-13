@@ -57,7 +57,7 @@ const navigate = useNavigate();
       {cart.length === 0 ? (
         <p className="text-gray-600">
           Your cart is empty.{" "}
-          <Link to="/" className="text-blue-500 underline">
+          <Link to="/Home" className="text-blue-500 underline">
             Go back to shopping
           </Link>
         </p>
