@@ -22,24 +22,34 @@ export default function Login() {
     }
   };
 
-  return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
+return (
+  <div
+    className="min-h-screen flex items-center justify-center bg-cover bg-center px-4 sm:px-6"
+    style={{
+      backgroundImage: `url(${require("../assets/LoginImage.png")})`,
+    }}
+  >
+    {/* Optional dark overlay */}
+    <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+
+    {/* Content wrapper */}
+    <div className="relative z-10 w-full max-w-md">
       {/* Logo + Title */}
-      <div className="flex items-center justify-center space-x-2 mb-4">
+      <div className="flex items-center justify-center space-x-2 mb-6">
         <img
           src={require("../assets/Appicon.png")}
           alt="HealthSync Logo"
-          className="w-12 h-12"
+          className="w-10 h-10 sm:w-12 sm:h-12"
         />
-        <p className="text-4xl font-bold">
-          <span className="text-black">Health</span>
-          <span className="text-green-500">Sync</span>
+        <p className="text-3xl sm:text-4xl font-bold">
+          <span className="text-white">Health</span>
+          <span className="text-green-400">Sync</span>
         </p>
       </div>
 
       {/* Login Form */}
-      <div className="bg-white rounded-lg shadow-md border border-gray-200 w-full max-w-md p-8">
-        <h2 className="text-3xl font-semibold mb-6">Sign in</h2>
+      <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6 sm:p-8">
+        <h2 className="text-2xl sm:text-3xl font-semibold mb-6 text-center">Sign in</h2>
         <form onSubmit={handleLogin}>
           <label className="block mb-1 font-semibold text-base">Email</label>
           <input
@@ -61,10 +71,7 @@ export default function Login() {
             required
           />
 
-          {/* 🔴 Error message (visible if error exists) */}
-          {error && (
-            <p className="text-red-600 text-sm mb-3">{error}</p>
-          )}
+          {error && <p className="text-red-600 text-sm mb-3">{error}</p>}
 
           <button
             type="submit"
@@ -74,23 +81,23 @@ export default function Login() {
           </button>
         </form>
 
-        <div className="mt-4 text-sm">
-          By continuing, you agree to our Conditions of Use and Privacy Notice.
+        <div className="mt-4 text-sm text-gray-700 text-center">
+          By continuing, you agree to our <span className="underline">Conditions of Use</span> and <span className="underline">Privacy Notice</span>.
         </div>
       </div>
 
       {/* Divider and Register */}
-      <div className="flex items-center w-full max-w-md mt-8 mb-2">
+      <div className="flex items-center mt-6 mb-2">
         <div className="flex-1 border-t border-gray-300"></div>
-        <span className="mx-2 text-gray-500 text-sm">New to HealthSync?</span>
+        <span className="mx-2 text-gray-200 text-sm">New to HealthSync?</span>
         <div className="flex-1 border-t border-gray-300"></div>
       </div>
 
-      <a href="/register" className="w-full max-w-md">
+      <a href="/register" className="block">
         <button className="w-full bg-white border border-gray-400 rounded-3xl py-2 text-base font-semibold hover:bg-gray-50 transition">
           Create your HealthSync account
         </button>
       </a>
     </div>
-  );
-}
+  </div>
+)}

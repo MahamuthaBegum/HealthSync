@@ -1,48 +1,52 @@
-// src/pages/Cart.jsx
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
-import { BrowserRouter } from "react-router-dom";
-
+import { collection, getDocs, query, where, updateDoc, doc, deleteDoc } from "firebase/firestore";
+import { auth, firestore } from "../firebase";
 
 export default function Cart() {
   const [cart, setCart] = useState([]);
-const navigate = useNavigate();
-
+  const navigate = useNavigate();
+  const user = auth.currentUser;
 
   useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem("cart") || "[]");
-    setCart(stored);
-  }, []);
+    const fetchCart = async () => {
+      if (!user) return;
 
-  const saveCart = (updated) => {
-    setCart(updated);
-    localStorage.setItem("cart", JSON.stringify(updated));
-  };
+      const cartRef = collection(firestore, "cart");
+      const q = query(cartRef, where("userId", "==", user.uid));
+      const snapshot = await getDocs(q);
+
+      const items = snapshot.docs.map((doc) => ({
+        ...doc.data(),
+        docId: doc.id,
+      }));
+
+      setCart(items);
+    };
+
+    fetchCart();
+  }, [user]);
 
   const parsePrice = (priceStr) => {
     return Number(priceStr.replace(/[^\d.]/g, ""));
   };
 
-  const increaseQty = (id) => {
-    const updated = cart.map((item) =>
-      item._id === id ? { ...item, qty: item.qty + 1 } : item
-    );
-    saveCart(updated);
+  const updateQty = async (docId, qty) => {
+    const item = cart.find((i) => i.docId === docId);
+    if (!item) return;
+
+    if (qty <= 0) {
+      await deleteDoc(doc(firestore, "cart", docId));
+      setCart(cart.filter((i) => i.docId !== docId));
+    } else {
+      await updateDoc(doc(firestore, "cart", docId), { qty });
+      setCart(cart.map((i) => (i.docId === docId ? { ...i, qty } : i)));
+    }
   };
 
-  const decreaseQty = (id) => {
-    const updated = cart
-      .map((item) =>
-        item._id === id ? { ...item, qty: item.qty - 1 } : item
-      )
-      .filter((item) => item.qty > 0); // remove if qty becomes 0
-    saveCart(updated);
-  };
-
-  const removeItem = (id) => {
-    const updated = cart.filter((item) => item._id !== id);
-    saveCart(updated);
+  const removeItem = async (docId) => {
+    await deleteDoc(doc(firestore, "cart", docId));
+    setCart(cart.filter((i) => i.docId !== docId));
   };
 
   const total = cart.reduce(
@@ -57,7 +61,7 @@ const navigate = useNavigate();
       {cart.length === 0 ? (
         <p className="text-gray-600">
           Your cart is empty.{" "}
-          <Link to="/Home" className="text-blue-500 underline">
+          <Link to="/" className="text-blue-500 underline">
             Go back to shopping
           </Link>
         </p>
@@ -66,7 +70,7 @@ const navigate = useNavigate();
           <div className="space-y-6">
             {cart.map((item) => (
               <div
-                key={item._id}
+                key={item.docId}
                 className="bg-white rounded shadow p-4 flex items-center justify-between"
               >
                 <div className="flex items-center gap-4">
@@ -84,14 +88,14 @@ const navigate = useNavigate();
                     <p className="text-green-700 font-bold">{item.CurrentPrice}</p>
                     <div className="flex items-center gap-2 mt-2">
                       <button
-                        onClick={() => decreaseQty(item._id)}
+                        onClick={() => updateQty(item.docId, item.qty - 1)}
                         className="bg-gray-300 px-2 py-1 rounded"
                       >
                         ➖
                       </button>
                       <span className="px-2">{item.qty}</span>
                       <button
-                        onClick={() => increaseQty(item._id)}
+                        onClick={() => updateQty(item.docId, item.qty + 1)}
                         className="bg-gray-300 px-2 py-1 rounded"
                       >
                         ➕
@@ -100,7 +104,7 @@ const navigate = useNavigate();
                   </div>
                 </div>
                 <button
-                  onClick={() => removeItem(item._id)}
+                  onClick={() => removeItem(item.docId)}
                   className="text-red-500 font-semibold hover:underline"
                 >
                   Remove
@@ -119,13 +123,12 @@ const navigate = useNavigate();
               <span>Total</span>
               <span>₹{total.toFixed(2)}</span>
             </div>
-          <button
-  onClick={() => navigate("/checkout")}
-  className="w-full mt-6 bg-blue-600 text-white py-3 rounded hover:bg-blue-700"
->
-  Proceed to Checkout
-</button>
-
+            <button
+              onClick={() => navigate("/checkout")}
+              className="w-full mt-6 bg-blue-600 text-white py-3 rounded hover:bg-blue-700"
+            >
+              Proceed to Checkout
+            </button>
           </div>
         </>
       )}
