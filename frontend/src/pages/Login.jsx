@@ -16,7 +16,7 @@ export default function Login() {
     setError(""); // Clear old error
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigate("/");
+      navigate("/Home");
     } catch (error) {
       setError(getFriendlyError); 
     }

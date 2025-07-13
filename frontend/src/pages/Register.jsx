@@ -25,7 +25,7 @@ export default function Register() {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       alert("Registered successfully!");
-      navigate("/login");
+      navigate("/");
     } catch (error) {
       setError(error.message);
     }
