@@ -1,6 +1,5 @@
 const Product = require("../models/productModel");
 
-// GET /api/products?category=Cardiac Care
 exports.getProducts = async (req, res) => {
   try {
     const limit = parseInt(req.query.limit) || 100;
@@ -17,8 +16,7 @@ exports.getProducts = async (req, res) => {
   }
 };
 
-// ✅ NEW: Global search based on ProductName
-// GET /api/products/search?query=will
+
 exports.searchProducts = async (req, res) => {
   try {
     const query = req.query.query || "";
@@ -33,7 +31,6 @@ exports.searchProducts = async (req, res) => {
   }
 };
 
-// POST /api/products
 exports.addProduct = async (req, res) => {
   try {
     const newProduct = new Product(req.body);

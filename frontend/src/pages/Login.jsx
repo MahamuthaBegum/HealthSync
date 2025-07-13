@@ -13,7 +13,7 @@ export default function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError(""); // Clear old error
+    setError(""); 
     try {
       await signInWithEmailAndPassword(auth, email, password);
       navigate("/Home");
@@ -29,12 +29,9 @@ return (
       backgroundImage: `url(${require("../assets/LoginImage.png")})`,
     }}
   >
-    {/* Optional dark overlay */}
     <div className="absolute inset-0 bg-black bg-opacity-40"></div>
 
-    {/* Content wrapper */}
     <div className="relative z-10 w-full max-w-md">
-      {/* Logo + Title */}
       <div className="flex items-center justify-center space-x-2 mb-6">
         <img
           src={require("../assets/Appicon.png")}

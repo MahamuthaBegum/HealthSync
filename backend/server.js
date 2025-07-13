@@ -3,7 +3,7 @@ const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const productRoutes = require("./routes/productRoutes");
 const cors = require("cors");
-const Product = require("./models/productModel"); // Adjust the path if needed
+const Product = require("./models/productModel");
 
 dotenv.config();
 
@@ -11,10 +11,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Connect to MongoDB and then start the server
-connectDB().then(async () => { // ✅ Call connectDB once and use its promise
-  // This code will run ONLY AFTER MongoDB is successfully connected
-  const count = await Product.countDocuments({}); // Count all documents
+connectDB().then(async () => {
+  const count = await Product.countDocuments({}); 
   console.log(`📦 Total products in DB: ${count}`);
 
   // API route

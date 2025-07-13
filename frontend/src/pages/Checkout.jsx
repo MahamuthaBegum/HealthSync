@@ -12,7 +12,7 @@ const Checkout = () => {
   const [alert, setAlert] = useState(null);
 
   useEffect(() => {
-    setTotalAmount(1250.75); // replace with actual cart total if needed
+    setTotalAmount(1250.75); 
   }, []);
 
   const handleChange = (e) => {
@@ -25,7 +25,7 @@ const Checkout = () => {
   };
 
   const handlePayment = () => {
-    const razorpayKey = "rzp_test_YOUR_KEY_ID"; // replace with your test key
+    const razorpayKey = "rzp_test_YOUR_KEY_ID"; 
 
     if (razorpayKey === "rzp_test_YOUR_KEY_ID") {
       showAlert("Please add your Razorpay Test Key.", "error");
@@ -65,14 +65,12 @@ const Checkout = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Manual empty field check
     const { name, address, pincode, phone } = formData;
     if (!name || !address || !pincode || !phone) {
       showAlert("Please fill out all fields", "error");
       return;
     }
 
-    // Pattern check for phone and pincode
     if (!/^\d{10}$/.test(phone) || !/^\d{6}$/.test(pincode)) {
       showAlert("Please enter valid phone and pincode.", "error");
       return;

@@ -37,12 +37,9 @@ return (
       backgroundImage: `url(${require("../assets/LoginImage.png")})`,
     }}
   >
-    {/* Optional overlay */}
     <div className="absolute inset-0 bg-black bg-opacity-40"></div>
 
-    {/* Register content wrapper */}
     <div className="relative z-10 w-full max-w-md space-y-6">
-      {/* Logo */}
       <div className="flex items-center justify-center space-x-2">
         <img
           src={require("../assets/Appicon.png")}

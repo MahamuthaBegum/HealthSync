@@ -1,6 +1,4 @@
-// src/App.js
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-// import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Cart from "./pages/Cart";
 import Login from "./pages/Login";
@@ -11,7 +9,6 @@ import Wishlist from "./pages/Wishlist";
 function App() {
   return (
     <BrowserRouter>
-      {/* <Navbar /> */}
       <div>
         <Routes>
           <Route path="/" element={<Login />} />

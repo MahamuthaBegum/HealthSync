@@ -11,11 +11,10 @@ const categories = [
   "Treatments", "Skin Care"
 ];
 
-// Function to safely extract a number from a string
 const extractNumber = (str) => {
-  if (typeof str !== 'string') return 0; // Handle non-string cases gracefully
-  const match = str.match(/[\d.]+/); // Matches one or more digits or a dot
-  return match ? parseFloat(match[0]) : 0; // Return parsed number or 0 if no match
+  if (typeof str !== 'string') return 0;
+  const match = str.match(/[\d.]+/); 
+  return match ? parseFloat(match[0]) : 0; 
 };
 
 export default function Home() {
@@ -114,7 +113,7 @@ export default function Home() {
   };
 
   const handleSearchClick = () => {
-    if (!searchText.trim()) return; // Prevent search on empty input
+    if (!searchText.trim()) return; 
     axios.get(`https://healthsync-6w2s.onrender.com/api/products`)
       .then((res) => {
         const filtered = res.data.filter((p) =>
@@ -127,8 +126,8 @@ export default function Home() {
 
   const handleCategoryClick = (cat) => {
     setSelected(cat);
-    setSearchText(""); // Clear search text when changing category
-    setIsGlobalSearch(false); // Reset global search flag
+    setSearchText(""); 
+    setIsGlobalSearch(false); 
   };
 
   return (
@@ -206,17 +205,16 @@ export default function Home() {
               {wishlistIds.includes(p._id) ? "❤️" : "🤍"}
             </button>
 
-            {/* Content Area - This will grow to fill available space */}
-            <div className="flex flex-col items-center pt-8 pb-4 flex-grow text-center"> {/* Added pt-8 for discount badge space */}
+            <div className="flex flex-col items-center pt-8 pb-4 flex-grow text-center"> 
               <img
                 src={require(`../assets/${p.ImageName}.jpg`)}
                 alt={p.ProductName}
-                className="h-28 w-28 object-contain mb-4 border border-gray-200 p-1 rounded" // Slightly larger image and border
+                className="h-28 w-28 object-contain mb-4 border border-gray-200 p-1 rounded" 
                 onError={(e) => e.currentTarget.src = require("../assets/default.png")}
               />
               
               <div className="text-left w-full px-2">
-                <h3 className="font-semibold text-lg leading-tight mb-1 min-h-[3rem] text-gray-900"> {/* min-h for consistent product name height */}
+                <h3 className="font-semibold text-lg leading-tight mb-1 min-h-[3rem] text-gray-900"> 
                   {p.ProductName}
                 </h3>
                 {p.MarketedBy && (
@@ -238,7 +236,6 @@ export default function Home() {
               </div>
             </div>
             
-            {/* Add to Cart Button - This will always be at the bottom */}
             <button
               onClick={() => handleAddToCart(p)}
               className="mt-auto w-full bg-[#10847e] text-white py-2 rounded-md font-semibold hover:bg-[#0e6f6a] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#10847e]"
