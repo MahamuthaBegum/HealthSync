@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { collection, getDocs, query, where, updateDoc, doc, deleteDoc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  updateDoc,
+  doc,
+  deleteDoc,
+} from "firebase/firestore";
 import { auth, firestore } from "../firebase";
 
 export default function Cart() {
@@ -12,9 +18,8 @@ export default function Cart() {
     const fetchCart = async () => {
       if (!user) return;
 
-      const cartRef = collection(firestore, "cart");
-      const q = query(cartRef, where("userId", "==", user.uid));
-      const snapshot = await getDocs(q);
+      const cartRef = collection(firestore, "users", user.uid, "cart");
+      const snapshot = await getDocs(cartRef);
 
       const items = snapshot.docs.map((doc) => ({
         ...doc.data(),
@@ -32,20 +37,26 @@ export default function Cart() {
   };
 
   const updateQty = async (docId, qty) => {
+    if (!user) return;
+
     const item = cart.find((i) => i.docId === docId);
     if (!item) return;
 
+    const itemRef = doc(firestore, "users", user.uid, "cart", docId);
+
     if (qty <= 0) {
-      await deleteDoc(doc(firestore, "cart", docId));
+      await deleteDoc(itemRef);
       setCart(cart.filter((i) => i.docId !== docId));
     } else {
-      await updateDoc(doc(firestore, "cart", docId), { qty });
+      await updateDoc(itemRef, { qty });
       setCart(cart.map((i) => (i.docId === docId ? { ...i, qty } : i)));
     }
   };
 
   const removeItem = async (docId) => {
-    await deleteDoc(doc(firestore, "cart", docId));
+    if (!user) return;
+
+    await deleteDoc(doc(firestore, "users", user.uid, "cart", docId));
     setCart(cart.filter((i) => i.docId !== docId));
   };
 

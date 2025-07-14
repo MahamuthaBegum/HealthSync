@@ -65,21 +65,27 @@ export default function Home() {
     fetchWishlist();
   }, [user]);
 
-  const handleAddToCart = async (product) => {
-    if (!user) {
-      alert("Please log in to add to cart");
-      return;
-    }
+const handleAddToCart = async (product) => {
+  if (!user) {
+    alert("Please log in to add to cart");
+    return;
+  }
 
-    const cartRef = doc(firestore, "users", user.uid, "cart", product._id);
-    try {
-      await setDoc(cartRef, { ...product, qty: 1 });
-      alert("Added to cart!");
-    } catch (error) {
-      console.error("Error adding to cart:", error);
-      alert("Failed to add to cart. Please try again.");
-    }
-  };
+  try {
+   const cartRef = doc(firestore, "users", user.uid, "cart", product._id);
+
+    await setDoc(cartRef, {
+      ...product,
+      qty: 1,
+      addedAt: new Date()
+    });
+    alert("Added to cart!");
+  } catch (error) {
+    console.error("Error adding to cart:", error.message);
+    alert("Failed to add to cart. Please try again.");
+  }
+};
+
 
   const toggleWishlist = async (product) => {
     if (!user) {
