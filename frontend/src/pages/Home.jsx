@@ -102,7 +102,6 @@ const toggleWishlist = async (product) => {
     if (wishlistIds.includes(product._id)) {
       await deleteDoc(wishlistRef);
       setWishlistIds((prev) => prev.filter((id) => id !== product._id));
-      // alert("Removed from wishlist!");
     } else {
       await setDoc(wishlistRef, {
         _id: product._id,
