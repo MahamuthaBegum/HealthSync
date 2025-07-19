@@ -82,7 +82,6 @@ const handleAddToCart = async (product) => {
       qty: 1,
       addedAt: new Date()
     });
-
     console.log("Product added to Firestore");
     alert("Added to cart!");
   } catch (error) {
@@ -101,8 +100,8 @@ const toggleWishlist = async (product) => {
 
   try {
     if (wishlistIds.includes(product._id)) {
-      await deleteDoc(wishlistRef); // Wait for Firebase to delete
-      setWishlistIds((prev) => prev.filter((id) => id !== product._id)); // Then update UI
+      await deleteDoc(wishlistRef);
+      setWishlistIds((prev) => prev.filter((id) => id !== product._id));
       // alert("Removed from wishlist!");
     } else {
       await setDoc(wishlistRef, {
@@ -112,9 +111,9 @@ const toggleWishlist = async (product) => {
         ImageName: product.ImageName,
         MRP: product.MRP,
         MarketedBy: product.MarketedBy || "",
-      }); // Wait for Firebase to add
-      setWishlistIds((prev) => [...prev, product._id]); // Then update UI
-      // alert("Added to wishlist!"); // optional
+      }); 
+      setWishlistIds((prev) => [...prev, product._id]);
+      // alert("Added to wishlist!");
     }
   } catch (error) {
     console.error("Error toggling wishlist:", error);
