@@ -84,6 +84,7 @@ const handleAddToCart = async (product) => {
     });
 
     console.log("Product added to Firestore");
+    alert("Added to cart!");
   } catch (error) {
     console.error("Error adding to cart:", error.message);
     alert("Failed to add to cart. Please try again.");
@@ -102,6 +103,7 @@ const toggleWishlist = async (product) => {
     if (wishlistIds.includes(product._id)) {
       await deleteDoc(wishlistRef); // Wait for Firebase to delete
       setWishlistIds((prev) => prev.filter((id) => id !== product._id)); // Then update UI
+      // alert("Removed from wishlist!");
     } else {
       await setDoc(wishlistRef, {
         _id: product._id,
