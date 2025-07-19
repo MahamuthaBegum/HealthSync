@@ -4,6 +4,7 @@ import { signOut, onAuthStateChanged } from "firebase/auth";
 import { collection, doc, getDocs, setDoc, deleteDoc } from "firebase/firestore";
 import { auth, firestore } from "../firebase";
 import axios from "axios";
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 
 const categories = [
   "Covid Essentials", "Diabetes", "Cardiac Care", "Stomach Care", "Ayurvedic",
@@ -72,13 +73,17 @@ const handleAddToCart = async (product) => {
   }
 
   try {
-   const cartRef = doc(firestore, "users", user.uid, "cart", product._id);
-
+    console.log("User UID:", user.uid);
+    console.log("Product ID:", product._id);
+    
+    const cartRef = doc(firestore, "users", user.uid, "cart", product._id);
     await setDoc(cartRef, {
       ...product,
       qty: 1,
       addedAt: new Date()
     });
+
+    console.log("Product added to Firestore");
     alert("Added to cart!");
   } catch (error) {
     console.error("Error adding to cart:", error.message);
@@ -86,28 +91,37 @@ const handleAddToCart = async (product) => {
   }
 };
 
+const toggleWishlist = async (product) => {
+  if (!user) {
+    alert("Please log in to add to wishlist");
+    return;
+  }
 
-  const toggleWishlist = async (product) => {
-    if (!user) {
-      alert("Please log in to add to wishlist");
-      return;
-    }
+  const wishlistRef = doc(firestore, "users", user.uid, "wishlist", product._id);
 
-    const wishlistRef = doc(firestore, "users", user.uid, "wishlist", product._id);
-    try {
-      if (wishlistIds.includes(product._id)) {
-        await deleteDoc(wishlistRef);
-        setWishlistIds((prev) => prev.filter((id) => id !== product._id));
-        alert("Removed from wishlist!");
-      } else {
-        await setDoc(wishlistRef, product);
-        setWishlistIds((prev) => [...prev, product._id]);
-      }
-    } catch (error) {
-      console.error("Error toggling wishlist:", error);
-      alert("Failed to update wishlist. Please try again.");
+  try {
+    if (wishlistIds.includes(product._id)) {
+      await deleteDoc(wishlistRef); // Wait for Firebase to delete
+      setWishlistIds((prev) => prev.filter((id) => id !== product._id)); // Then update UI
+      alert("Removed from wishlist!");
+    } else {
+      await setDoc(wishlistRef, {
+        _id: product._id,
+        ProductName: product.ProductName,
+        CurrentPrice: product.CurrentPrice,
+        ImageName: product.ImageName,
+        MRP: product.MRP,
+        MarketedBy: product.MarketedBy || "",
+      }); // Wait for Firebase to add
+      setWishlistIds((prev) => [...prev, product._id]); // Then update UI
+      // alert("Added to wishlist!"); // optional
     }
-  };
+  } catch (error) {
+    console.error("Error toggling wishlist:", error);
+    alert("Failed to update wishlist. Please try again.");
+  }
+};
+
 
   const handleSignOut = () => {
     signOut(auth).then(() => {
@@ -207,9 +221,14 @@ const handleAddToCart = async (product) => {
             )}
             
             {/* Wishlist Button */}
-            <button onClick={() => toggleWishlist(p)} className="absolute top-2 right-2 text-2xl z-10 text-gray-400 hover:text-red-500 transition-colors" aria-label="Toggle Wishlist">
-              {wishlistIds.includes(p._id) ? "❤️" : "🤍"}
-            </button>
+
+<button onClick={() => toggleWishlist(p)} className="absolute top-2 right-2 text-2xl z-10">
+  {wishlistIds.includes(p._id) ? (
+    <AiFillHeart className="text-red-500" />
+  ) : (
+    <AiOutlineHeart className="text-gray-400 hover:text-red-500 transition-colors" />
+  )}
+</button>
 
             <div className="flex flex-col items-center pt-8 pb-4 flex-grow text-center"> 
               <img
